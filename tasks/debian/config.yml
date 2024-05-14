@@ -1,0 +1,32 @@
+---
+
+- name: Graylog | Config | Generate password hash
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      tr -d '\n' | sha256sum | cut -d " " -f1
+    stdin: "{{ GL_CONFIG.pwd.graylog }}"
+  args:
+    executable: '/bin/bash'
+  no_log: true
+  register: log_gl_hash
+  check_mode: false
+  changed_when: false
+
+- name: Graylog | Config | Server config
+  ansible.builtin.template:
+    src: "templates{{ GL_HC.path.gl_config }}/graylog.conf.j2"
+    dest: "{{ GL_HC.path.gl_config }}/graylog.conf"
+    owner: 'root'
+    group: 'graylog'
+    mode: 0640
+  vars:
+    graylog_admin_hash: "{{ log_gl_hash.stdout }}"
+
+- name: Graylog | Config | Docker-Compose config
+  ansible.builtin.template:
+    src: 'templates/etc/graylog/docker-compose.yml.j2'
+    dest: '/etc/graylog/docker-compose.yml'
+    owner: 'root'
+    group: 'root'
+    mode: 0640

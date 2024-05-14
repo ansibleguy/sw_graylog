@@ -1,3 +1,19 @@
 ---
 
-GL_HC: {}
+GL_HC:
+  uid:
+    # see: https://github.com/Graylog2/graylog-docker/blob/6.0/docker/oss/Dockerfile#L56
+    graylog: 1100
+    mongodb: 1101
+    opensearch: 1102
+
+  path:
+    lib: '/var/local/lib'
+    config: '/etc/graylog'
+    os_data: '/var/local/lib/opensearch'
+    os_dockerfile: '/etc/graylog/Dockerfile_opensearch'
+    mongo_data: '/var/local/lib/mongodb'
+    mongo_dockerfile: '/etc/graylog/Dockerfile_mongodb'
+    gl_data: '/var/local/lib/graylog/data'
+    gl_journal: '/var/local/lib/graylog/journal'
+    gl_config: '/etc/graylog/server'

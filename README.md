@@ -46,15 +46,16 @@ ansible-galaxy install -r requirements.yml
 
 
   * **Default config**:
-    * 
+    * Syslog Listeners on 5140 (TCP/UDP)
+    * GELF Listeners on 12201 (TCP/UDP)
  
 
   * **Default opt-ins**:
-    * 
+    * Auto-Update Job
 
 
   * **Default opt-outs**:
-    * 
+    * Backup Job (*high storage usage*)
 
 ## Info
 

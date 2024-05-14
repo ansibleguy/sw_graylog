@@ -1,0 +1,15 @@
+# {{ ansible_managed }}
+# ansibleguy.sw_graylog
+
+[Unit]
+Description=Service to back-up Graylog
+Requires=docker.service
+Documentation=https://github.com/ansibleguy/sw_graylog
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash /usr/local/bin/graylog-backup.sh
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=graylog-backup

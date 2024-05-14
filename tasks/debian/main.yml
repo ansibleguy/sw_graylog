@@ -1,13 +1,31 @@
 ---
 
-- name: Graylog | Installing docker
-  ansible.builtin.include_role:
-    name: ansibleguy.infra_docker_minimal
-  vars:
-    docker:
-      compose:
-        enable: true
-  tags: docker
-  args:
-    apply:
-      tags: docker
+- name: Graylog | Install
+  ansible.builtin.import_tasks: debian/install.yml
+  tags: install
+
+- name: Graylog | Config
+  ansible.builtin.import_tasks: debian/config.yml
+  tags: config
+
+- name: Graylog | Backup
+  ansible.builtin.import_tasks: debian/backup.yml
+  when: GL_CONFIG.backup.enable | bool
+  tags: backup
+
+- name: Graylog | Enabling/starting service
+  ansible.builtin.systemd:
+    daemon_reload: yes
+    name: 'graylog.service'
+    enabled: yes
+    state: started
+  tags: install
+
+- name: Graylog | Enabling/starting update timer
+  ansible.builtin.systemd:
+    daemon_reload: yes
+    name: 'graylog-update.timer'
+    enabled: yes
+    state: started
+  when: GL_CONFIG.auto_update.enable | bool
+  tags: install

@@ -1,0 +1,20 @@
+# {{ ansible_managed }}
+# ansibleguy.sw_graylog
+
+[Unit]
+Description=Service to update dockerized Graylog
+Requires=docker.service
+After=network.target
+Documentation=https://github.com/ansibleguy/sw_graylog
+
+[Service]
+Type=simple
+ExecStart=/bin/bash /usr/local/bin/graylog-update.sh
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=graylog-update
+Restart=on-failure
+RestartSec=60s
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,4 @@
+FROM mongo:{{ GL_CONFIG.version.mongodb }}
+RUN groupmod --gid {{ GL_HC.uid.mongodb }} mongodb; \
+	usermod --uid {{ GL_HC.uid.mongodb }} mongodb; \
+	chown -R mongodb:mongodb /data/db /data/configdb

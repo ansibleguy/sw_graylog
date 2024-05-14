@@ -1,0 +1,19 @@
+# {{ ansible_managed }}
+# ansibleguy.sw_graylog
+
+# for all settings - see: https://github.com/Graylog2/graylog2-server/blob/6.0.0/misc/graylog.conf
+
+############################
+# GRAYLOG CONFIGURATION FILE
+############################
+
+# NOTE: some basic settings are set as environmental variables
+
+password_secret = {{ GL_CONFIG.secret }}
+root_password_sha2 = {{ graylog_admin_hash }}
+
+{% for setting, value in GL_CONFIG.settings.items() %}
+{%   if setting | lower not in ['password_secret', 'root_password_sha2', 'node_id_file', 'mongodb_uri', 'elasticsearch_hosts', 'http_bind_address'] %}
+{{ setting | lower }} = {{ value }}
+{%   endif %}
+{% endfor %}

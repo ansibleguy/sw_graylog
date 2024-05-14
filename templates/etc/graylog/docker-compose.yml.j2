@@ -1,0 +1,87 @@
+---
+
+version: '3'
+
+networks:
+  log:
+    driver: 'bridge'
+
+services:
+  mongodb:
+    hostname: 'mongodb'
+    container_name: 'log-mongodb'
+    image: 'local/mongodb:{{ GL_CONFIG.version.mongodb }}'
+    build:
+      context: .
+      dockerfile: '{{ GL_HC.path.mongo_dockerfile }}'
+    user: '{{ GL_HC.uid.mongodb }}:{{ GL_HC.uid.mongodb }}'
+    volumes:
+      - '{{ GL_HC.path.mongo_data }}:/data/db'
+    ports:
+      - '127.0.0.1:27017:27017/tcp'
+    restart: 'always'
+    networks:
+      - 'log'
+
+  opensearch:
+    hostname: 'opensearch'
+    container_name: 'log-opensearch'
+    image: 'local/opensearch:{{ GL_CONFIG.version.opensearch }}'
+    build:
+      context: .
+      dockerfile: '{{ GL_HC.path.mongo_dockerfile }}'
+    user: '{{ GL_HC.uid.opensearch }}:{{ GL_HC.uid.opensearch }}'
+    environment:
+      UID: {{ GL_HC.uid.opensearch }}
+      GID: {{ GL_HC.uid.opensearch }}
+      OPENSEARCH_INITIAL_ADMIN_PASSWORD: "{{ GL_CONFIG.pwd.opensearch }}"
+      OPENSEARCH_JAVA_OPTS: '-Xms1g -Xmx1g'
+      bootstrap.memory_lock: true
+      discovery.type: 'single-node'
+      action.auto_create_index: false
+      plugins.security.ssl.http.enabled: false
+      plugins.security.disabled: true
+    ulimits:
+      memlock:
+        hard: -1
+        soft: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    ports:
+      - '127.0.0.1:9200:9200'
+      - '127.0.0.1:9600:9600'
+    volumes:
+      - "{{ GL_HC.path.os_data }}:/usr/share/opensearch/data"
+    restart: 'always'
+    networks:
+      - 'log'
+
+  graylog:
+    container_name: 'log-graylog'
+    image: 'graylog/graylog:{{ GL_CONFIG.version.graylog }}'
+    depends_on:
+      - 'mongodb'
+      - 'opensearch'
+    entrypoint: '/usr/bin/tini -- wait-for-it opensearch:9200 --  /docker-entrypoint.sh'
+    user: '{{ GL_HC.uid.graylog }}:{{ GL_HC.uid.graylog }}'
+    environment:
+      UID: {{ GL_HC.uid.graylog }}
+      GID: {{ GL_HC.uid.graylog }}
+      GRAYLOG_NODE_ID_FILE: '/usr/share/graylog/data/config/node-id'
+      GRAYLOG_HTTP_BIND_ADDRESS: '0.0.0.0:9000'
+      GRAYLOG_ELASTICSEARCH_HOSTS: 'http://opensearch:9200'
+      GRAYLOG_MONGODB_URI: 'mongodb://mongodb:27017/graylog'
+      GRAYLOG_REPORT_DISABLE_SANDBOX: 'true'
+    ports:
+      - '127.0.0.1:9000:9000/tcp'
+{% for port in GL_CONFIG.ports %}
+      - "{{ port }}"
+{% endfor %}
+    volumes:
+        - "{{ GL_HC.path.gl_data }}:/usr/share/graylog/data/data"
+        - "{{ GL_HC.path.gl_journal }}:/usr/share/graylog/data/journal"
+        - "{{ GL_HC.path.gl_config }}:/usr/share/graylog/data/config"
+    restart: 'always'
+    networks:
+      - 'log'

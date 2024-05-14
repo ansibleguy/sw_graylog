@@ -1,0 +1,22 @@
+# {{ ansible_managed }}
+# ansibleguy.sw_graylog
+
+[Unit]
+Description=Service to run dockerized Graylog
+Requires=docker.service
+After=network.target
+Documentation=https://github.com/ansibleguy/sw_graylog
+
+[Service]
+Type=simple
+TimeoutStartSec=1800
+ExecStart=docker compose -f {{ GL_HC.path.config }}/docker-compose.yml up
+ExecStop=docker compose -f {{ GL_HC.path.config }}/docker-compose.yml stop --timeout 30
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=graylog
+Restart=on-failure
+RestartSec=60s
+
+[Install]
+WantedBy=multi-user.target

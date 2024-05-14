@@ -4,4 +4,64 @@ no_prompts: false
 debug: false
 
 # default config => is overwritten by provided config
-defaults_graylog: {}
+defaults_graylog:
+  hostname:
+  secret:
+  pwd:
+    opensearch:
+    graylog:
+
+  docker_nftables: false  # reload nftables after docker start to clean the auto-created iptables rules
+
+  version:
+    opensearch: '2'  # latest on major version 2
+    mongodb: '6'  # latest on major version 6
+    graylog: '6.0'  # latest on 6.0
+
+  ports:
+    - '5140:5140/tcp'  # syslog TCP
+    - '5140:5140/udp'  # syslog UDP
+    - '12201:12201/tcp'  # GELF TCP
+    - '12201:12201/udp'  # GELF UDP
+
+  auto_update:
+    enable: true
+    timer: 'Sat *-*-* 05:00:00'
+
+  backup:  # WARNING: will take up much space!
+    enable: false
+    path: '/var/backups/graylog'
+    retention_days: 14
+    timer: '*-*-* 23:00:00'
+
+  # see also: https://github.com/Graylog2/graylog2-server/blob/6.0.0/misc/graylog.conf
+  settings:
+    http_publish_uri: 'http://127.0.0.1:9000/'
+    # http_external_uri: 'http://127.0.0.1:9000/'
+
+    # increase for more performance
+    inputbuffer_processors: 2
+    processbuffer_processors: 5
+    outputbuffer_processors: 3
+
+    is_leader: 'true'
+    bin_dir: 'bin'
+    data_dir: 'data'
+    plugin_dir: 'plugin'
+    stream_aware_field_types: 'false'
+    disabled_retention_strategies: 'none,close'
+    allow_leading_wildcard_searches: 'false'
+    allow_highlighting: 'false'
+    field_value_suggestion_mode: 'on'
+    output_batch_size: 500
+    output_flush_interval: 1
+    output_fault_count_threshold: 5
+    output_fault_penalty_seconds: 30
+    ring_size: 65536
+    processor_wait_strategy: 'blocking'
+    inputbuffer_wait_strategy: 'blocking'
+    inputbuffer_ring_size: 65536
+    message_journal_enabled: true
+    lb_recognition_period_seconds: 3
+    mongodb_uri: 'mongodb://localhost/graylog'
+    mongodb_max_connections: 1000

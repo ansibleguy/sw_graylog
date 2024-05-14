@@ -1,0 +1,3 @@
+FROM opensearchproject/opensearch:{{ GL_CONFIG.version.opensearch }}
+RUN groupmod --gid {{ GL_HC.uid.opensearch }} opensearch; \
+	usermod --uid {{ GL_HC.uid.opensearch }} opensearch
