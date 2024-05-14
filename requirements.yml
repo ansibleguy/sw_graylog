@@ -1,0 +1,10 @@
+---
+# external roles and collections to download
+# install: ansible-galaxy install -r requirements.yml
+
+roles:
+  - src: 'ansibleguy.infra_nginx'
+  - src: 'ansibleguy.infra_docker_minimal'
+
+collections:
+  - 'community.general'

@@ -1,0 +1,4 @@
+---
+
+graylog: {}
+GL_CONFIG: "{{ defaults_graylog | combine(graylog, recursive=true) }}"

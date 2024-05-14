@@ -1,0 +1,13 @@
+---
+
+- name: Graylog | Installing docker
+  ansible.builtin.include_role:
+    name: ansibleguy.infra_docker_minimal
+  vars:
+    docker:
+      compose:
+        enable: true
+  tags: docker
+  args:
+    apply:
+      tags: docker
