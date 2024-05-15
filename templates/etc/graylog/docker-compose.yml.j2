@@ -1,7 +1,5 @@
 ---
 
-version: '3'
-
 networks:
   log:
     driver: 'bridge'
@@ -29,7 +27,7 @@ services:
     image: 'local/opensearch:{{ GL_CONFIG.version.opensearch }}'
     build:
       context: .
-      dockerfile: '{{ GL_HC.path.mongo_dockerfile }}'
+      dockerfile: '{{ GL_HC.path.os_dockerfile }}'
     user: '{{ GL_HC.uid.opensearch }}:{{ GL_HC.uid.opensearch }}'
     environment:
       UID: {{ GL_HC.uid.opensearch }}

@@ -4,10 +4,12 @@
   ansible.builtin.assert:
     that:
       - graylog is defined
+      - graylog.domain | default(none, true) is not none
       - graylog.secret | default(none, true) is not none
       - graylog.secret | length > 16
-      - graylog.pwd.opensearch | default(none, true) is not none
       - graylog.pwd.graylog | default(none, true) is not none
+      - graylog.pwd.opensearch | default(none, true) is not none
+      - graylog.pwd.opensearch | meets_password_complexity
   tags: always
 
 - name: Graylog | Processing debian config

@@ -1,3 +1,6 @@
 FROM opensearchproject/opensearch:{{ GL_CONFIG.version.opensearch }}
+USER root
 RUN groupmod --gid {{ GL_HC.uid.opensearch }} opensearch; \
-	usermod --uid {{ GL_HC.uid.opensearch }} opensearch
+	usermod --uid {{ GL_HC.uid.opensearch }} opensearch; \
+	chown -R opensearch:opensearch /usr/share/opensearch
+USER opensearch

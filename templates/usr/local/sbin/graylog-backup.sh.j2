@@ -3,6 +3,24 @@
 set -euo pipefail
 
 PATH_BACKUP="{{ GL_CONFIG.backup.path }}"
-PATH_CONFIG="{{ GL_HC.path.gl_data }}/"
-MONGODB="127.0.0.1:27017"
+PATH_CONFIG="{{ GL_HC.path.gl_config }}/"
+MONGODB="127.0.0.1:27017/graylog"
 OPENSEARCH="http://127.0.0.1:9000/"
+RETENTION="{{ GL_CONFIG.backup.retention_days }}"
+
+TS="$(date +'%Y-%m-%d_%H-%M-%S')"
+BD="${PATH_BACKUP}/${TS}"
+
+mkdir "$BD"
+
+cp "${PATH_CONFIG}/node-id" "$BD"
+cp "${PATH_CONFIG}/graylog.conf" "$BD"
+
+docker exec -i log-mongodb /usr/bin/mongodump --uri "mongodb://${MONGODB}" --archive > "${BD}/mongodb.dump"
+
+# todo: opensearch snapshots
+
+tar -cJvf "${BD}.tar.xz" "$BD"
+rm -rf "$BD"
+
+# todo: cleanup if older than retention

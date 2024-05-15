@@ -112,6 +112,7 @@
     group: 'root'
     mode: 0750
   when: GL_CONFIG.auto_update.enable | bool
+  tags: config
 
 - name: Graylog | Install | Adding update service
   ansible.builtin.template:

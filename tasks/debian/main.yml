@@ -13,6 +13,26 @@
   when: GL_CONFIG.backup.enable | bool
   tags: backup
 
+- name: Graylog | Webserver
+  ansible.builtin.import_role:
+    name: ansibleguy.infra_nginx
+  when: GL_CONFIG.manage.webserver | bool
+  tags: [webserver, install]
+  vars:
+    gl_nginx_config_overrides:
+      domain: "{{ GL_CONFIG.domain }}"
+      aliases: "{{ GL_CONFIG.aliases }}"
+      proxy:
+        proto: 'http'
+        port: 9000
+      security:
+        restrict_methods: true
+        allow_only_methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE']
+
+    nginx:
+      sites:
+        graylog: "{{ GL_CONFIG.nginx | combine(gl_nginx_config_overrides, recursive=true) }}"
+
 - name: Graylog | Enabling/starting service
   ansible.builtin.systemd:
     daemon_reload: yes

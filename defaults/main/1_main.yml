@@ -5,13 +5,22 @@ debug: false
 
 # default config => is overwritten by provided config
 defaults_graylog:
-  hostname:
+  domain:
+  aliases: []
   secret:
   pwd:
-    opensearch:
+    opensearch:  # minimal: 8 char, 1 uppercase, 1 lowercase, 1 digit, 1 special-char
     graylog:
 
-  docker_nftables: false  # reload nftables after docker start to clean the auto-created iptables rules
+  manage:
+    webserver: true
+
+  docker_nftables: false
+  # reload nftables after docker start to clean the auto-created iptables rules
+  # you will have to manage the docker ruleset yourself - example:
+  #   forward: {proto: ['tcp', 'udp', 'icmp'], src: '172.18.0.0/16', dest: '172.18.0.0/16'}
+  #   output: accept
+  #   postrouting: accept & {src: '172.18.0.0/16', dest: '!= 172.18.0.0/16', masquerade: true}
 
   version:
     opensearch: '2'  # latest on major version 2
@@ -65,3 +74,16 @@ defaults_graylog:
     lb_recognition_period_seconds: 3
     mongodb_uri: 'mongodb://localhost/graylog'
     mongodb_max_connections: 1000
+
+  nginx:  # configure the webserver settings => see: https://github.com/ansibleguy/infra_nginx
+    port_plain: 80
+    port_ssl: 443
+    ssl:
+      mode: 'snakeoil'  # existing/snakeoil/selfsigned/ca/letsencrypt
+      cert:
+        name:
+        cn: 'Graylog Certificate'
+        org: 'AnsibleGuy'
+
+      letsencrypt:
+        email: ''
