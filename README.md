@@ -39,11 +39,11 @@ ansible-galaxy install -r requirements.yml
 
 * **Package installation**
   * Ansible dependencies (_minimal_)
+  * Docker server and client
+  * Nginx if webserver is managed
 
 
 * **Configuration**
-  * 
-
 
   * **Default config**:
     * Syslog Listeners on 5140 (TCP/UDP)
@@ -52,6 +52,7 @@ ansible-galaxy install -r requirements.yml
 
   * **Default opt-ins**:
     * Auto-Update Job
+    * Managing Webserver => see: [THIS Role](https://github.com/ansibleguy/infra_nginx)
 
 
   * **Default opt-outs**:
@@ -70,15 +71,66 @@ ansible-galaxy install -r requirements.yml
 * **Warning:** Not every setting/variable you provide will be checked for validity. Bad config might break the role!
 
 
+* **Note:** The Graylog `secret` has to be at least 16 characters long!
+
+
+* **Note:** The OpenSearch admin password has to meet some complexity criteria:
+
+  * minimum length of 8 characters
+  * at least one lowercase character
+  * at least one uppercase character
+  * at least one digit
+  * at least one special character
+
+
 ## Usage
 
 ### Config
 
-Define the config as needed:
+Minimal example:
 
 ```yaml
-app:
+graylog:
+  domain: 'log.template.ansibleguy.net'
+  secret: !vault |
+    ...
+  pwd:
+    graylog: !vault |  # admin
+      ...
+    opensearch: !vault |  # admin
+      ...
+```
 
+Update as needed:
+
+```yaml
+graylog:
+  domain: 'log.template.ansibleguy.net'
+  aliases: ['syslog.template.ansibleguy.net']
+  secret: !vault |
+    ...
+  pwd:
+    graylog: !vault |  # admin
+      ...
+    opensearch: !vault |  # admin
+      ...  
+
+  manage:
+    webserver: true  # you could disable the role-managed nginx if you want to self-manage it
+
+  docker_nftables: true  # self-manage firewall; clear docker auto-created rules
+  
+  settings:  # graylog config file settings; see: https://github.com/Graylog2/graylog2-server/blob/6.0.0/misc/graylog.conf
+    inputbuffer_processors: 5
+    processbuffer_processors: 5
+    outputbuffer_processors: 3
+
+  backup:  # WARNING: high disk usage
+    enable: true
+    retention_days: 14
+
+  auto_update:  # auto update containers to latest minor release
+    enable: true
 ```
 
 You might want to use 'ansible-vault' to encrypt your passwords:

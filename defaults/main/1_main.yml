@@ -7,7 +7,7 @@ debug: false
 defaults_graylog:
   domain:
   aliases: []
-  secret:
+  secret:  # minimum 16 chars
   pwd:
     opensearch:  # minimal: 8 char, 1 uppercase, 1 lowercase, 1 digit, 1 special-char
     graylog:
@@ -72,7 +72,6 @@ defaults_graylog:
     inputbuffer_ring_size: 65536
     message_journal_enabled: true
     lb_recognition_period_seconds: 3
-    mongodb_uri: 'mongodb://localhost/graylog'
     mongodb_max_connections: 1000
 
   nginx:  # configure the webserver settings => see: https://github.com/ansibleguy/infra_nginx
