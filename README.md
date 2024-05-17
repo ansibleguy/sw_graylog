@@ -19,6 +19,8 @@ Molecule Logs: [Short](https://badges.ansibleguy.net/log/molecule_sw_graylog_tes
 **Tested:**
 * Debian 12
 
+----
+
 ## Install
 
 ```bash
@@ -35,53 +37,13 @@ ansible-galaxy install ansibleguy.sw_graylog --roles-path ./roles
 ansible-galaxy install -r requirements.yml
 ```
 
-## Functionality
+----
 
-* **Package installation**
-  * Ansible dependencies (_minimal_)
-  * Docker server and client
-  * Nginx if webserver is managed
+## Roadmap
 
+* GeoIP download and mapping for [easy integration](https://graylog.org/post/how-to-set-up-graylog-geoip-configuration/)
 
-* **Configuration**
-
-  * **Default config**:
-    * Syslog Listeners on 5140 (TCP/UDP)
-    * GELF Listeners on 12201 (TCP/UDP)
- 
-
-  * **Default opt-ins**:
-    * Auto-Update Job
-    * Managing Webserver => see: [THIS Role](https://github.com/ansibleguy/infra_nginx)
-
-
-  * **Default opt-outs**:
-    * Backup Job (*high storage usage*)
-
-## Info
-
-* **Note:** this role currently only supports debian-based systems
-
-
-* **Note:** Most of the role's functionality can be opted in or out.
-
-  For all available options - see the default-config located in [the main defaults-file](https://github.com/ansibleguy/sw_graylog/blob/latest/defaults/main/1_main.yml)!
-
-
-* **Warning:** Not every setting/variable you provide will be checked for validity. Bad config might break the role!
-
-
-* **Note:** The Graylog `secret` has to be at least 16 characters long!
-
-
-* **Note:** The OpenSearch admin password has to meet some complexity criteria:
-
-  * minimum length of 8 characters
-  * at least one lowercase character
-  * at least one uppercase character
-  * at least one digit
-  * at least one special character
-
+----
 
 ## Usage
 
@@ -146,10 +108,62 @@ ansible-playbook -K -D -i inventory/hosts.yml playbook.yml
 ```
 
 There are also some useful **tags** available:
-* 
-*
+* config
+* install
+* docker
+* webserver
+* backup
 
 To debug errors - you can set the 'debug' variable at runtime:
 ```bash
 ansible-playbook -K -D -i inventory/hosts.yml playbook.yml -e debug=yes
 ```
+
+----
+
+## Functionality
+
+* **Package installation**
+  * Ansible dependencies (_minimal_)
+  * Docker server and client
+  * Nginx if webserver is managed
+
+
+* **Configuration**
+
+  * **Default config**:
+    * Syslog Listeners on 5140 (TCP/UDP)
+    * GELF Listeners on 12201 (TCP/UDP)
+ 
+
+  * **Default opt-ins**:
+    * Auto-Update Job
+    * Managing Webserver => see: [THIS Role](https://github.com/ansibleguy/infra_nginx)
+
+
+  * **Default opt-outs**:
+    * Backup Job (*high storage usage*)
+
+## Info
+
+* **Note:** this role currently only supports debian-based systems
+
+
+* **Note:** Most of the role's functionality can be opted in or out.
+
+  For all available options - see the default-config located in [the main defaults-file](https://github.com/ansibleguy/sw_graylog/blob/latest/defaults/main/1_main.yml)!
+
+
+* **Warning:** Not every setting/variable you provide will be checked for validity. Bad config might break the role!
+
+
+* **Note:** The Graylog `secret` has to be at least 16 characters long!
+
+
+* **Note:** The OpenSearch admin password has to meet some complexity criteria:
+
+  * minimum length of 8 characters
+  * at least one lowercase character
+  * at least one uppercase character
+  * at least one digit
+  * at least one special character
