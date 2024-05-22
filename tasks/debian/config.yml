@@ -22,6 +22,7 @@
     mode: 0640
   vars:
     graylog_admin_hash: "{{ log_gl_hash.stdout }}"
+  notify: graylog-restart
 
 - name: Graylog | Config | Docker-Compose config
   ansible.builtin.template:
@@ -31,3 +32,4 @@
     group: 'root'
     mode: 0640
   no_log: true
+  notify: graylog-rebuild

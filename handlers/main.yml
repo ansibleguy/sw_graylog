@@ -1,0 +1,9 @@
+---
+
+- name: graylog-restart
+  ansible.builtin.command: 'docker restart log-graylog'
+
+- name: graylog-rebuild
+  ansible.builtin.systemd:
+    name: 'graylog-update.service'
+    state: started
