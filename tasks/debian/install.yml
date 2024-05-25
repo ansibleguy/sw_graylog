@@ -95,7 +95,7 @@
     owner: 'root'
     group: 'docker'
     mode: 0640
-  notify: graylog-rebuild
+  notify: Graylog-rebuild
 
 - name: Graylog | Install | MongoDB Dockerfile
   ansible.builtin.template:
@@ -104,7 +104,7 @@
     owner: 'root'
     group: 'docker'
     mode: 0640
-  notify: graylog-rebuild
+  notify: Graylog-rebuild
 
 - name: Graylog | Install | Adding service files
   ansible.builtin.template:

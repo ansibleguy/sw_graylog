@@ -22,7 +22,7 @@
     mode: 0640
   vars:
     graylog_admin_hash: "{{ log_gl_hash.stdout }}"
-  notify: graylog-restart
+  notify: Graylog-restart
 
 - name: Graylog | Config | Opensearch config
   ansible.builtin.template:
@@ -35,7 +35,7 @@
     - 'opensearch.yml'
     - 'jvm.options'
     - 'log4j2.properties'
-  notify: opensearch-restart
+  notify: Opensearch-restart
 
 - name: Graylog | Config | Docker-Compose config
   ansible.builtin.template:
@@ -45,4 +45,4 @@
     group: 'root'
     mode: 0640
   no_log: true
-  notify: graylog-rebuild
+  notify: Graylog-rebuild

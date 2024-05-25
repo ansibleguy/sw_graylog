@@ -1,12 +1,14 @@
 ---
 
-- name: graylog-restart
+- name: Graylog-restart
   ansible.builtin.command: 'docker restart log-graylog'
+  tags: skip_ansible_lint  # no-changed-when
 
-- name: graylog-rebuild
+- name: Graylog-rebuild
   ansible.builtin.systemd:
     name: 'graylog-update.service'
     state: started
 
-- name: opensearch-restart
+- name: Opensearch-restart
   ansible.builtin.command: 'docker restart log-opensearch'
+  tags: skip_ansible_lint  # no-changed-when
