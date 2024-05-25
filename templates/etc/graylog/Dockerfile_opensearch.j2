@@ -3,4 +3,10 @@ USER root
 RUN groupmod --gid {{ GL_HC.uid.opensearch }} opensearch; \
 	usermod --uid {{ GL_HC.uid.opensearch }} opensearch; \
 	chown -R opensearch:opensearch /usr/share/opensearch
+{% for plugin in GL_CONFIG.opensearch.plugins.remove | ensure_list %}
+RUN /usr/share/opensearch/bin/opensearch-plugin remove {{ plugin }}
+{% endfor %}
+{% for plugin in GL_CONFIG.opensearch.plugins.install | ensure_list %}
+RUN /usr/share/opensearch/bin/opensearch-plugin install {{ plugin }}
+{% endfor %}
 USER opensearch

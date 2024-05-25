@@ -74,6 +74,28 @@ defaults_graylog:
     lb_recognition_period_seconds: 3
     mongodb_max_connections: 1000
 
+  opensearch:
+    ram: '4g'  # Xms/Xmx JVM settings
+    plugins:
+      install: []
+      remove:  # remove unnecessary plugins
+        - 'opensearch-skills'  # ml extension
+        - 'opensearch-ml'
+        - 'opensearch-security-analytics'
+        - 'opensearch-performance-analyzer'
+
+    jvm_settings: {}
+    # see: https://opensearch.org/docs/latest/install-and-configure/install-opensearch/index/#important-system-properties
+
+    cluster_settings:
+      # see: https://opensearch.org/docs/2.2/api-reference/cluster-api/cluster-settings/
+      transient:
+        'cluster.info.update.interval': '1m'
+        'cluster.routing.allocation.disk.watermark.low': '95%'
+        'cluster.routing.allocation.disk.watermark.high': '98%'
+        # opensearch will stop writing data if more disk space is used
+        'cluster.routing.allocation.disk.watermark.flood_stage': '99%'
+
   nginx:  # configure the webserver settings => see: https://github.com/ansibleguy/infra_nginx
     port_plain: 80
     port_ssl: 443

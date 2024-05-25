@@ -5,13 +5,13 @@ set -euo pipefail
 echo "### STOPPING GRAYLOG ###"
 systemctl stop graylog.service
 docker compose -f "{{ GL_HC.path.config }}/docker-compose.yml" down
-docker image rm "local/opensearch:{{ GL_CONFIG.version.opensearch }}"
-docker image rm "local/mongodb:{{ GL_CONFIG.version.mongodb }}"
+docker image rm "local/opensearch:{{ GL_CONFIG.version.opensearch }}" || true
+docker image rm "local/mongodb:{{ GL_CONFIG.version.mongodb }}" || true
 docker image prune -f
 
 echo "### UPDATING GRAYLOG ###"
-docker compose -f "{{ GL_HC.path.config }}/docker-compose.yml" pull --quiet
 docker compose -f "{{ GL_HC.path.config }}/docker-compose.yml" build
+docker compose -f "{{ GL_HC.path.config }}/docker-compose.yml" pull --quiet --ignore-pull-failures
 
 echo "### STARTING GRAYLOG ###"
 systemctl start graylog.service

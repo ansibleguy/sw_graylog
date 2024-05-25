@@ -7,3 +7,6 @@
   ansible.builtin.systemd:
     name: 'graylog-update.service'
     state: started
+
+- name: opensearch-restart
+  ansible.builtin.command: 'docker restart log-opensearch'

@@ -1,0 +1,12 @@
+---
+
+cluster.name: graylog
+action.auto_create_index: false
+path.data: '/usr/share/opensearch/data'
+path.logs: '/usr/share/opensearch/logs'
+path.repo: '/usr/share/opensearch/backup'
+http.port: 9200
+transport.port: 9300
+plugins.security.disabled: true
+plugins.security.ssl.transport.enabled: false
+network.host: 0.0.0.0

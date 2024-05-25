@@ -87,6 +87,9 @@ graylog:
     processbuffer_processors: 5
     outputbuffer_processors: 3
 
+  opensearch:
+    ram: '10g'
+
   backup:  # WARNING: high disk usage
     enable: true
     retention_days: 14
@@ -134,6 +137,8 @@ ansible-playbook -K -D -i inventory/hosts.yml playbook.yml -e debug=yes
   * **Default config**:
     * Syslog Listeners on 5140 (TCP/UDP)
     * GELF Listeners on 12201 (TCP/UDP)
+    * 4GB of RAM for OpenSearch
+    * [Disk watermark for OpenSearch](https://opensearch.org/docs/2.2/api-reference/cluster-api/cluster-settings/) set to 99%
  
 
   * **Default opt-ins**:

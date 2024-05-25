@@ -21,7 +21,7 @@
 
 - name: Graylog | Backup | Enabling/starting backup timer
   ansible.builtin.systemd:
-    daemon_reload: yes
+    daemon_reload: true
     name: 'graylog-backup.timer'
-    enabled: yes
+    enabled: true
     state: started

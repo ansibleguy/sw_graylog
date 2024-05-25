@@ -15,11 +15,11 @@
     apply:
       tags: docker
 
-- name: HAProxy | Install | Dependencies
+- name: Graylog | Install | Dependencies
   ansible.builtin.apt:
-    name: ['zip']
+    name: ['zip', 'curl']
 
-- name: HAProxy | Install | Creating service users
+- name: Graylog | Install | Creating service users
   ansible.builtin.user:
     name: "{{ item.n }}"
     shell: '/usr/sbin/nologin'
@@ -30,7 +30,7 @@
     - {n: 'mongodb', u: "{{ GL_HC.uid.mongodb }}"}
     - {n: 'graylog', u: "{{ GL_HC.uid.graylog }}"}
 
-- name: Graylog | Install | Creating Config Dir
+- name: Graylog | Install | Creating Config-Dir
   ansible.builtin.file:
     path: "{{ GL_HC.path.config }}"
     state: directory
@@ -38,13 +38,21 @@
     owner: 'root'
     group: 'graylog'
 
-- name: Graylog | Install | Creating Config Dir 2
+- name: Graylog | Install | Creating Config-Dir 2
   ansible.builtin.file:
     path: "{{ GL_HC.path.config }}/server"
     state: directory
     mode: 0750
     owner: 'graylog'
     group: 'graylog'
+
+- name: Graylog | Install | Creating OpenSearch Config-Dir
+  ansible.builtin.file:
+    path: "{{ GL_HC.path.config }}/opensearch"
+    state: directory
+    mode: 0750
+    owner: 'root'
+    group: 'opensearch'
 
 - name: Graylog | Install | Creating OpenSearch Data-Dirs
   ansible.builtin.file:
@@ -87,6 +95,7 @@
     owner: 'root'
     group: 'docker'
     mode: 0640
+  notify: graylog-rebuild
 
 - name: Graylog | Install | MongoDB Dockerfile
   ansible.builtin.template:
@@ -95,6 +104,7 @@
     owner: 'root'
     group: 'docker'
     mode: 0640
+  notify: graylog-rebuild
 
 - name: Graylog | Install | Adding service files
   ansible.builtin.template:
@@ -123,3 +133,13 @@
   loop:
     - 'graylog-update.service'
     - 'graylog-update.timer'
+
+# https://opensearch.org/docs/2.6/quickstart/
+- name: Graylog | Install | Update systctl settings for Opensearch
+  ansible.posix.sysctl:
+    name: "{{ item.k }}"
+    value: "{{ item.v }}"
+    state: present
+  loop:
+    - {k: 'vm.swappiness', v: 1}
+    - {k: 'vm.max_map_count', v: 262144}

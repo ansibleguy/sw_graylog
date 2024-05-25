@@ -13,6 +13,14 @@
   when: GL_CONFIG.backup.enable | bool
   tags: backup
 
+- name: Graylog | Backup | Disabling/stopping backup timer
+  ansible.builtin.systemd:
+    daemon_reload: false
+    name: 'graylog-backup.timer'
+    enabled: false
+    state: stopped
+  when: not GL_CONFIG.backup.enable | bool
+
 - name: Graylog | Webserver
   ansible.builtin.import_role:
     name: ansibleguy.infra_nginx
@@ -33,19 +41,38 @@
       sites:
         graylog: "{{ GL_CONFIG.nginx | combine(gl_nginx_config_overrides, recursive=true) }}"
 
+- name: Graylog | Handlers
+  ansible.builtin.meta: flush_handlers
+  tags: [config, install]
+
 - name: Graylog | Enabling/starting service
   ansible.builtin.systemd:
-    daemon_reload: yes
+    daemon_reload: true
     name: 'graylog.service'
-    enabled: yes
+    enabled: true
     state: started
   tags: install
 
 - name: Graylog | Enabling/starting update timer
   ansible.builtin.systemd:
-    daemon_reload: yes
     name: 'graylog-update.timer'
-    enabled: yes
+    enabled: true
     state: started
   when: GL_CONFIG.auto_update.enable | bool
   tags: install
+
+- name: Graylog | Disabling/stopping update timer
+  ansible.builtin.systemd:
+    name: 'graylog-update.timer'
+    enabled: false
+    state: stopped
+  when: not GL_CONFIG.auto_update.enable | bool
+  tags: install
+
+- name: Graylog | Update Opensearch cluster-settings
+  ansible.builtin.uri:
+    url: 'http://127.0.0.1:9200/_cluster/settings'
+    method: 'PUT'
+    body_format: 'json'
+    body: "{{ GL_CONFIG.opensearch.cluster_settings }}"
+  tags: [config, install]

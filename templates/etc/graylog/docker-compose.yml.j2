@@ -33,7 +33,6 @@ services:
       UID: {{ GL_HC.uid.opensearch }}
       GID: {{ GL_HC.uid.opensearch }}
       OPENSEARCH_INITIAL_ADMIN_PASSWORD: "{{ GL_CONFIG.pwd.opensearch }}"
-      OPENSEARCH_JAVA_OPTS: '-Xms1g -Xmx1g'
       bootstrap.memory_lock: true
       discovery.type: 'single-node'
       action.auto_create_index: false
@@ -48,9 +47,12 @@ services:
         hard: 65536
     ports:
       - '127.0.0.1:9200:9200'
-      - '127.0.0.1:9600:9600'
     volumes:
       - "{{ GL_HC.path.os_data }}:/usr/share/opensearch/data"
+      - "{{ GL_CONFIG.backup.path }}/opensearch:/usr/share/opensearch/backup"
+      - "{{ GL_HC.path.config }}/opensearch/opensearch.yml:/usr/share/opensearch/config/opensearch.yml"
+      - "{{ GL_HC.path.config }}/opensearch/jvm.options:/usr/share/opensearch/config/jvm.options"
+      - "{{ GL_HC.path.config }}/opensearch/log4j2.properties:/usr/share/opensearch/config/log4j2.properties"
     restart: 'always'
     networks:
       - 'log'

@@ -24,6 +24,19 @@
     graylog_admin_hash: "{{ log_gl_hash.stdout }}"
   notify: graylog-restart
 
+- name: Graylog | Config | Opensearch config
+  ansible.builtin.template:
+    src: "templates{{ GL_HC.path.config }}/opensearch/{{ item }}.j2"
+    dest: "{{ GL_HC.path.config }}/opensearch/{{ item }}"
+    owner: 'root'
+    group: 'opensearch'
+    mode: 0640
+  loop:
+    - 'opensearch.yml'
+    - 'jvm.options'
+    - 'log4j2.properties'
+  notify: opensearch-restart
+
 - name: Graylog | Config | Docker-Compose config
   ansible.builtin.template:
     src: 'templates/etc/graylog/docker-compose.yml.j2'
