@@ -139,6 +139,7 @@ ansible-playbook -K -D -i inventory/hosts.yml playbook.yml -e debug=yes
     * GELF Listeners on 12201 (TCP/UDP)
     * 4GB of RAM for OpenSearch
     * [Disk watermark for OpenSearch](https://opensearch.org/docs/2.2/api-reference/cluster-api/cluster-settings/) set to 99%
+    * 1GB max size of message journal cache
  
 
   * **Default opt-ins**:
