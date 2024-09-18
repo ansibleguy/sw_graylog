@@ -82,6 +82,9 @@ services:
         - "{{ GL_HC.path.gl_data }}:/usr/share/graylog/data/data"
         - "{{ GL_HC.path.gl_journal }}:/usr/share/graylog/data/journal"
         - "{{ GL_HC.path.gl_config }}:/usr/share/graylog/data/config"
+{% if GL_CONFIG.geoip.enable | bool }
+        - "{{ GL_CONFIG.geoip.path }}:{{ GL_CONFIG.geoip.path }}"
+{% endif %}
     restart: 'always'
     networks:
       - 'log'

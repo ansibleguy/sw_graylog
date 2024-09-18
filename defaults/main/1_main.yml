@@ -12,6 +12,10 @@ defaults_graylog:
     opensearch:  # minimal: 8 char, 1 uppercase, 1 lowercase, 1 digit, 1 special-char
     graylog:
 
+  geoip:  # mount the geoip path into the graylog container
+    enable: false
+    path: '/etc/geoip'
+
   manage:
     webserver: true
 
