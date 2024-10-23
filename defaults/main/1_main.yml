@@ -19,6 +19,7 @@ defaults_graylog:
   manage:
     webserver: true
 
+  docker_mtu:
   docker_nftables: false
   # reload nftables after docker start to clean the auto-created iptables rules
   # you will have to manage the docker ruleset yourself - example:

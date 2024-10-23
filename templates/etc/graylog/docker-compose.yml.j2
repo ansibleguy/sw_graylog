@@ -3,6 +3,10 @@
 networks:
   log:
     driver: 'bridge'
+{% if GL_CONFIG.docker_mtu | default(none, true) is not none %}
+    driver_opts:
+      com.docker.network.driver.mtu: {{ GL_CONFIG.docker_mtu }}
+{% endif %}
 
 services:
   mongodb:
