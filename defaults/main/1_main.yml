@@ -81,6 +81,17 @@ defaults_graylog:
     message_journal_max_age: '72h'
     message_journal_max_size: '1gb'
 
+    # transport_email_enabled: true
+    # transport_email_hostname: ''
+    # transport_email_port: 587
+    # transport_email_use_auth: true
+    # transport_email_use_tls: true
+    # transport_email_use_ssl: false
+    # transport_email_auth_username: ''
+    # transport_email_auth_password: ''
+    # transport_email_subject_prefix: ''
+    # transport_email_from_email: ''
+
   opensearch:
     ram: '4g'  # Xms/Xmx JVM settings
     plugins:
