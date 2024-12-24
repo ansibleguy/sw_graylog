@@ -7,9 +7,25 @@
     path: '/root/.bashrc'
     marker: "# {mark} ANSIBLE MANAGED BLOCK LOG-PKI"
 
+- name: Graylog | Certs | Check Server-Certificate
+  ansible.builtin.stat:
+    path: "{{ GL_HC.path.pki }}/issued/logserver.crt"
+  register: gl_crt_file
+
+- name: Graylog | Certs | Revoke existing Server-Certificate
+  ansible.builtin.command: "docker run --rm -v {{ GL_HC.path.pki }}:/pki/pki -it local/pki \
+  /pki/pki.sh revoke logserver"
+  when:
+    - gl_crt_file.stat.exists
+    - regenerate_cert | bool
+
 - name: Graylog | Certs | Create Server-Certificate
   ansible.builtin.command: "docker run --rm -v {{ GL_HC.path.pki }}:/pki/pki -it local/pki \
-  /pki/pki.sh --subject-alt-name='{{ GL_CONFIG.pki.server_san | build_cert_san }}' build-server-full logserver nopass"
+  /pki/pki.sh --subject-alt-name='{{ cert_san }}' build-server-full logserver nopass"
+  vars:
+    cert_san: "{{ GL_CONFIG.pki.server_san |
+    extend_list(GL_CONFIG.domain) | extend_list(GL_CONFIG.aliases) |
+    build_cert_san }}"
   args:
     creates: "{{ GL_HC.path.pki }}/issued/logserver.crt"
 

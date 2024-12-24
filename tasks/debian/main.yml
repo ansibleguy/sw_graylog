@@ -87,4 +87,4 @@
 
 - name: Graylog | Certs
   ansible.builtin.import_tasks: debian/certs.yml
-  tags: [config, install]
+  tags: [config, install, pki]

@@ -11,6 +11,7 @@ class FilterModule(object):
             "meets_password_complexity": self.meets_password_complexity,
             "is_boolean": self.is_boolean,
             "build_cert_san": self.build_cert_san,
+            "extend_list": self.extend_list,
         }
 
     @staticmethod
@@ -41,3 +42,17 @@ class FilterModule(object):
                 san.append(f'DNS:{sr}')
 
         return ','.join(san)
+
+    @staticmethod
+    def ensure_list(data: (str, dict, list)) -> list:
+        # if user supplied a string instead of a list => convert it to match our expectations
+        if isinstance(data, list):
+            return data
+
+        return [data]
+
+    @classmethod
+    def extend_list(cls, l1: any, l2: any) -> list:
+        out = cls.ensure_list(l1)
+        out.extend(cls.ensure_list(l2))
+        return out
