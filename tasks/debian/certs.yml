@@ -11,7 +11,6 @@
   ansible.builtin.command: "docker run --rm -v {{ GL_HC.path.pki }}:/pki/pki -it local/pki \
   /pki/pki.sh --subject-alt-name='{{ GL_CONFIG.pki.server_san | build_cert_san }}' build-server-full logserver nopass"
   args:
-    executable: '/bin/bash'
     creates: "{{ GL_HC.path.pki }}/issued/logserver.crt"
 
 - name: Graylog | Certs | Copy Server-Certificates
