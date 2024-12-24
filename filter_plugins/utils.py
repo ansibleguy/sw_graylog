@@ -55,4 +55,5 @@ class FilterModule(object):
     def extend_list(cls, l1: any, l2: any) -> list:
         out = cls.ensure_list(l1)
         out.extend(cls.ensure_list(l2))
+        out = list(set(out))  # dedupe
         return out
