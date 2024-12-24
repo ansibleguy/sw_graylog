@@ -86,9 +86,36 @@ services:
         - "{{ GL_HC.path.gl_data }}:/usr/share/graylog/data/data"
         - "{{ GL_HC.path.gl_journal }}:/usr/share/graylog/data/journal"
         - "{{ GL_HC.path.gl_config }}:/usr/share/graylog/data/config"
-{% if GL_CONFIG.geoip.enable | bool }
+        - "{{ GL_HC.path.gl_ssl }}:/usr/share/graylog/data/ssl"
+{% if GL_CONFIG.geoip.enable | bool %}
         - "{{ GL_CONFIG.geoip.path }}:{{ GL_CONFIG.geoip.path }}"
 {% endif %}
     restart: 'always'
+    networks:
+      - 'log'
+
+  pki:
+    container_name: 'log-pki'
+    image: 'local/pki:latest'
+    build:
+      context: .
+      dockerfile: 'Dockerfile_pki'
+      args:
+        PKI_CA_EXPIRE: {{ GL_CONFIG.pki.ca_expire_days }}
+        PKI_CERT_EXPIRE: {{ GL_CONFIG.pki.cert_expire_days }}
+        PKI_ALGO: '{{ GL_CONFIG.pki.algo }}'
+        PKI_CURVE: '{{ GL_CONFIG.pki.curve }}'
+        PKI_KEY_SIZE: '{{ GL_CONFIG.pki.key_size }}'
+        PKI_DIGEST: '{{ GL_CONFIG.pki.digest }}'
+        PKI_REQ_COUNTRY: '{{ GL_CONFIG.pki.request.country }}'
+        PKI_REQ_PROVINCE: '{{ GL_CONFIG.pki.request.province }}'
+        PKI_REQ_CITY: '{{ GL_CONFIG.pki.request.city }}'
+        PKI_REQ_ORG: '{{ GL_CONFIG.pki.request.org }}'
+        PKI_REQ_OU: '{{ GL_CONFIG.pki.request.ou }}'
+        PKI_REQ_EMAIL: '{{ GL_CONFIG.pki.request.email }}'
+    environment:
+        PKI_SECRET: '{{ GL_CONFIG.pki.secret }}'
+    volumes:
+      - '{{ GL_HC.path.pki }}:/pki/pki'
     networks:
       - 'log'

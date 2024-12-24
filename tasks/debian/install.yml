@@ -46,6 +46,12 @@
     owner: 'graylog'
     group: 'graylog'
 
+- name: Graylog | Install | Creating PKI Dirs
+  ansible.builtin.file:
+    path: "{{ GL_HC.path.pki }}"
+    state: directory
+    mode: 0750
+
 - name: Graylog | Install | Creating OpenSearch Config-Dir
   ansible.builtin.file:
     path: "{{ GL_HC.path.config }}/opensearch"
@@ -86,7 +92,17 @@
   loop:
     - "{{ GL_HC.path.gl_data }}"
     - "{{ GL_HC.path.gl_journal }}"
+    - "{{ GL_HC.path.gl_ssl }}"
     - "{{ GL_CONFIG.backup.path }}/graylog"
+
+- name: Graylog | Install | PKI Dockerfile
+  ansible.builtin.copy:
+    src: 'templates/etc/graylog/Dockerfile_pki'
+    dest: "{{ GL_HC.path.pki_dockerfile }}"
+    owner: 'root'
+    group: 'docker'
+    mode: 0640
+  notify: Graylog-rebuild
 
 - name: Graylog | Install | OpenSearch Dockerfile
   ansible.builtin.template:
@@ -134,7 +150,7 @@
     - 'graylog-update.service'
     - 'graylog-update.timer'
 
-# https://opensearch.org/docs/2.6/quickstart/
+# https://opensearch.org/docs/latest/getting-started/quickstart/
 - name: Graylog | Install | Update systctl settings for Opensearch
   ansible.posix.sysctl:
     name: "{{ item.k }}"

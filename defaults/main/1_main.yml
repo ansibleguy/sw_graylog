@@ -106,8 +106,8 @@ defaults_graylog:
     # see: https://opensearch.org/docs/latest/install-and-configure/install-opensearch/index/#important-system-properties
 
     cluster_settings:
-      # see: https://opensearch.org/docs/2.2/api-reference/cluster-api/cluster-settings/
-      transient:
+      # see: https://opensearch.org/docs/latest/api-reference/cluster-api/cluster-settings/
+      persistent:
         'cluster.info.update.interval': '1m'
         'cluster.routing.allocation.disk.watermark.low': '95%'
         'cluster.routing.allocation.disk.watermark.high': '98%'
@@ -126,3 +126,26 @@ defaults_graylog:
 
       letsencrypt:
         email: ''
+
+  pki:
+    server_san:
+      - '127.0.0.1'
+      - '::1'
+      - "{{ ansible_host }}"
+      - "{{ inventory_hostname }}"
+    ca_expire_days: 7300  # 20y
+    cert_expire_days: 1825  # 5y
+    algo: 'ec'
+    curve: 'secp384r1'
+    key_size: 4096
+    digest: 'sha256'
+    request:
+      country: 'AT'  # WARNING: needs to be a VALID country-code!
+      province: '-'
+      city: '-'
+      org: '-'
+      ou: '-'
+      email: '-'
+
+    # optionally - if none or len < 12 it will be auto-generated
+    secret: ''

@@ -170,6 +170,9 @@ ansible-playbook -K -D -i inventory/hosts.yml playbook.yml -e debug=yes
 
 ## Info
 
+* **Note:** For more background-info - see: [OXL - Graylog Logserver](https://github.com/O-X-L/logserver-graylog)
+
+
 * **Note:** this role currently only supports debian-based systems
 
 
@@ -191,3 +194,19 @@ ansible-playbook -K -D -i inventory/hosts.yml playbook.yml -e debug=yes
   * at least one uppercase character
   * at least one digit
   * at least one special character
+
+
+* **Tip**: You can use the Bash-Alias `log-pki` to create and revoke client-certificates.
+
+  **Create**: `log-pki build-client-full <NAME> nopass`
+
+    Find it in: `/var/local/lib/log-pki/issued` and `/var/local/lib/log-pki/private`
+
+  **Revoke**: `log-pki revoke <NAME>`
+
+
+* **Note**: You can enable TLS for your Log-Inputs using the auto-generated server-certificate: (*path inside the container*)
+
+  CA: `/usr/share/graylog/data/ssl/ca.crt`
+  Public: `/usr/share/graylog/data/ssl/logserver.crt`
+  Private: `/usr/share/graylog/data/ssl/logserver.key`

@@ -14,6 +14,10 @@ root_password_sha2 = {{ graylog_admin_hash }}
 
 {% for setting, value in GL_CONFIG.settings.items() %}
 {%   if setting | lower not in ['password_secret', 'root_password_sha2', 'node_id_file', 'mongodb_uri', 'elasticsearch_hosts', 'http_bind_address'] %}
+{%     if value | is_boolean %}
+{{ setting | lower }} = {{ 'true' if value | bool else 'false' }}
+{%     else %}
 {{ setting | lower }} = {{ value }}
+{%     endif %}
 {%   endif %}
 {% endfor %}

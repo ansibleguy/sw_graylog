@@ -1,0 +1,28 @@
+---
+
+- name: Graylog | Certs | Add PKI Bash-Alias
+  ansible.builtin.blockinfile:
+    content: |
+      alias log-pki='docker run --rm -v {{ GL_HC.path.pki }}:/pki/pki -it local/pki /pki/pki.sh'
+    path: '/root/.bashrc'
+    marker: "# {mark} ANSIBLE MANAGED BLOCK LOG-PKI"
+
+- name: Graylog | Certs | Create Server-Certificate
+  ansible.builtin.command: "docker run --rm -v {{ GL_HC.path.pki }}:/pki/pki -it local/pki \
+  /pki/pki.sh --subject-alt-name='{{ GL_CONFIG.pki.server_san | build_cert_san }}' build-server-full logserver nopass"
+  args:
+    executable: '/bin/bash'
+    creates: "{{ GL_HC.path.pki }}/issued/logserver.crt"
+
+- name: Graylog | Certs | Copy Server-Certificates
+  ansible.builtin.copy:
+    remote_src: true
+    src: "{{ item.s }}"
+    dest: "{{ item.d }}"
+    mode: 0640
+    owner: 'root'
+    group: 'graylog'
+  with_items:
+    - {s: "{{ GL_HC.path.pki }}/ca.crt", d: "{{ GL_HC.path.gl_ssl }}/ca.crt"}
+    - {s: "{{ GL_HC.path.pki }}/issued/logserver.crt", d: "{{ GL_HC.path.gl_ssl }}/logserver.crt"}
+    - {s: "{{ GL_HC.path.pki }}/private/logserver.nopw.key", d: "{{ GL_HC.path.gl_ssl }}/logserver.key"}

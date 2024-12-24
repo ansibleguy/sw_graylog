@@ -20,6 +20,10 @@
     enabled: false
     state: stopped
   when: not GL_CONFIG.backup.enable | bool
+  register: gl_backup_dis
+  failed_when:
+    - gl_backup_dis.failed
+    - "'Could not find the requested service' not in gl_backup_dis.msg"
 
 - name: Graylog | Webserver
   ansible.builtin.import_role:
@@ -68,6 +72,10 @@
     state: stopped
   when: not GL_CONFIG.auto_update.enable | bool
   tags: install
+  register: gl_update_dis
+  failed_when:
+    - gl_update_dis.failed
+    - "'Could not find the requested service' not in gl_update_dis.msg"
 
 - name: Graylog | Update Opensearch cluster-settings
   ansible.builtin.uri:
@@ -75,4 +83,8 @@
     method: 'PUT'
     body_format: 'json'
     body: "{{ GL_CONFIG.opensearch.cluster_settings }}"
+  tags: [config, install]
+
+- name: Graylog | Certs
+  ansible.builtin.import_tasks: debian/certs.yml
   tags: [config, install]

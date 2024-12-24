@@ -17,3 +17,6 @@ GL_HC:
     gl_data: '/var/local/lib/graylog/data'
     gl_journal: '/var/local/lib/graylog/journal'
     gl_config: '/etc/graylog/server'
+    gl_ssl: '/var/local/lib/graylog/ssl'
+    pki: '/var/local/lib/log-pki'
+    pki_dockerfile: '/etc/graylog/Dockerfile_pki'
