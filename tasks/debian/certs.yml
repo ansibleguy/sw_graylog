@@ -18,6 +18,7 @@
   when:
     - gl_crt_file.stat.exists
     - regenerate_cert | bool
+  tags: [skip_ansible_lint]  # changed when
 
 - name: Graylog | Certs | Create Server-Certificate
   ansible.builtin.command: "docker run --rm -v {{ GL_HC.path.pki }}:/pki/pki -it local/pki \
