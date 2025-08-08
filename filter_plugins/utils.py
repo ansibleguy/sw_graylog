@@ -11,6 +11,7 @@ class FilterModule(object):
             "meets_password_complexity": self.meets_password_complexity,
             "is_boolean": self.is_boolean,
             "build_cert_san": self.build_cert_san,
+            "ensure_list": self.ensure_list,
             "extend_list": self.extend_list,
         }
 
