@@ -115,7 +115,7 @@ defaults_graylog:
         # opensearch will stop writing data if more disk space is used
         'cluster.routing.allocation.disk.watermark.flood_stage': '99%'
 
-  nginx:  # configure the webserver settings => see: https://github.com/ansibleguy/infra_nginx
+  nginx:  # configure the webserver settings => see: https://github.com/O-X-L/ansible-role-nginx
     port_plain: 80
     port_ssl: 443
     ssl:

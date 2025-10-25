@@ -27,7 +27,7 @@
 
 - name: Graylog | Webserver
   ansible.builtin.import_role:
-    name: ansibleguy.infra_nginx
+    name: oxlorg.nginx
   when: GL_CONFIG.manage.webserver | bool
   tags: [webserver, install]
   vars:

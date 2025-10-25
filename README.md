@@ -6,16 +6,16 @@
 
 Role to deploy dockerized Graylog-Server on a linux server
 
-[![Lint](https://github.com/ansibleguy/sw_graylog/actions/workflows/lint.yml/badge.svg)](https://github.com/ansibleguy/sw_graylog/actions/workflows/lint.yml)
-[![Ansible Galaxy](https://badges.ansibleguy.net/galaxy.badge.svg)](https://galaxy.ansible.com/ui/standalone/roles/ansibleguy/sw_graylog)
+[![Lint](https://github.com/O-X-L/ansible-role-graylog/actions/workflows/lint.yml/badge.svg)](https://github.com/O-X-L/ansible-role-graylog/actions/workflows/lint.yml)
+[![Ansible Galaxy](https://badges.oss.oxl.app/galaxy.badge.svg)](https://galaxy.ansible.com/ui/standalone/roles/oxlorg/graylog)
 
 **Molecule Integration-Tests**:
 
-* Status: [![Molecule Test Status](https://badges.ansibleguy.net/sw_graylog.molecule.svg)](https://github.com/ansibleguy/_meta_cicd/blob/latest/templates/usr/local/bin/cicd/molecule.sh.j2) |
-[![Functional-Tests](https://github.com/ansibleguy/sw_graylog/actions/workflows/integration_test_result.yml/badge.svg)](https://github.com/ansibleguy/sw_graylog/actions/workflows/integration_test_result.yml)
-* Logs: [API](https://ci.ansibleguy.net/api/job/ansible-test-molecule-sw_graylog/logs?token=2b7bba30-9a37-4b57-be8a-99e23016ce70&lines=1000) | [Short](https://badges.ansibleguy.net/log/molecule_sw_graylog_test_short.log) | [Full](https://badges.ansibleguy.net/log/molecule_sw_graylog_test.log)
+* Status: [![Molecule Test Status](https://badges.oss.oxl.app/sw_graylog.molecule.svg)](https://github.com/O-X-L/ansible-role-oxl-cicd/blob/latest/templates/usr/local/bin/cicd/molecule.sh.j2) |
+[![Functional-Tests](https://github.com/O-X-L/ansible-role-graylog/actions/workflows/integration_test_result.yml/badge.svg)](https://github.com/O-X-L/ansible-role-graylog/actions/workflows/integration_test_result.yml)
+* Logs: [API](https://ci.oss.oxl.app/api/job/ansible-test-molecule-sw_graylog/logs?token=2b7bba30-9a37-4b57-be8a-99e23016ce70&lines=1000) | [Short](https://badges.oss.oxl.app/log/molecule_sw_graylog_test_short.log) | [Full](https://badges.oss.oxl.app/log/molecule_sw_graylog_test.log)
 
-Internal CI: [Tester Role](https://github.com/ansibleguy/_meta_cicd) | [Jobs API](https://github.com/O-X-L/github-self-hosted-jobs-systemd)
+Internal CI: [Tester Role](https://github.com/O-X-L/ansible-role-oxl-cicd) | [Jobs API](https://github.com/O-X-L/github-self-hosted-jobs-systemd)
 
 **Tested:**
 * Debian 12
@@ -26,13 +26,13 @@ Internal CI: [Tester Role](https://github.com/ansibleguy/_meta_cicd) | [Jobs API
 
 ```bash
 # latest
-ansible-galaxy role install git+https://github.com/ansibleguy/sw_graylog
+ansible-galaxy role install git+https://github.com/O-X-L/ansible-role-graylog
 
 # from galaxy
-ansible-galaxy install ansibleguy.sw_graylog
+ansible-galaxy install oxlorg.graylog
 
 # or to custom role-path
-ansible-galaxy install ansibleguy.sw_graylog --roles-path ./roles
+ansible-galaxy install oxlorg.graylog --roles-path ./roles
 
 # install dependencies
 ansible-galaxy install -r requirements.yml
@@ -54,7 +54,7 @@ Minimal example:
 
 ```yaml
 graylog:
-  domain: 'log.template.ansibleguy.net'
+  domain: 'log.template.oxl.at'
   secret: !vault |
     ...
   pwd:
@@ -68,8 +68,8 @@ Update as needed:
 
 ```yaml
 graylog:
-  domain: 'log.template.ansibleguy.net'
-  aliases: ['syslog.template.ansibleguy.net']
+  domain: 'log.template.oxl.at'
+  aliases: ['syslog.template.oxl.at']
   secret: !vault |
     ...
   pwd:
@@ -145,7 +145,7 @@ ansible-playbook -K -D -i inventory/hosts.yml playbook.yml -e debug=yes
 
   * **Default opt-ins**:
     * Auto-Update Job
-    * Managing Webserver => see: [THIS Role](https://github.com/ansibleguy/infra_nginx)
+    * Managing Webserver => see: [THIS Role](https://github.com/O-X-L/ansible-role-nginx)
 
 
   * **Default opt-outs**:
@@ -161,7 +161,7 @@ ansible-playbook -K -D -i inventory/hosts.yml playbook.yml -e debug=yes
 
 * **Note:** Most of the role's functionality can be opted in or out.
 
-  For all available options - see the default-config located in [the main defaults-file](https://github.com/ansibleguy/sw_graylog/blob/latest/defaults/main/1_main.yml)!
+  For all available options - see the default-config located in [the main defaults-file](https://github.com/O-X-L/ansible-role-graylog/blob/latest/defaults/main/1_main.yml)!
 
 
 * **Warning:** Not every setting/variable you provide will be checked for validity. Bad config might break the role!

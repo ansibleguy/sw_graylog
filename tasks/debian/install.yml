@@ -2,7 +2,7 @@
 
 - name: Graylog | Install | Docker
   ansible.builtin.include_role:
-    name: ansibleguy.infra_docker_minimal
+    name: oxlorg.docker_minimal
   vars:
     docker:
       compose:

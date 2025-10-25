@@ -3,8 +3,11 @@
 # install: ansible-galaxy install -r requirements.yml
 
 roles:
-  - src: 'ansibleguy.infra_nginx'
-  - src: 'ansibleguy.infra_docker_minimal'
+  - name: 'oxlorg.nginx'
+    src: 'git+https://github.com/O-X-L/ansible-role-nginx'
+
+  - name: 'oxlorg.docker_minimal'
+    src: 'git+https://github.com/O-X-L/ansible-role-docker-minimal'
 
 collections:
   - 'community.general'
